@@ -298,6 +298,15 @@ void SX1276SetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                         bool fixLen, bool crcOn, bool FreqHopOn,
                         uint8_t HopPeriod, bool iqInverted, uint32_t timeout );
 
+
+/*!
+ * \brief Checks if the given RF frequency is supported by the hardware
+ *
+ * \param [IN] frequency RF frequency to be checked
+ * \retval isSupported [true: supported, false: unsupported]
+ */
+bool SX1276CheckRfFrequency( uint32_t frequency );
+
 /*!
  * \brief Computes the packet time on air in us for the given payload
  *
@@ -395,5 +404,10 @@ uint8_t SX1276GetPaSelect( uint32_t channel );
 
 /* Schedule to call app_scheduler function */
 void SX1276Scheduler( void );
+
+
+extern void SX1276OnTimeoutIrq( void * p_context );
+
+
 
 #endif // __SX1276_H__

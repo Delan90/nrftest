@@ -1,0 +1,744 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o (exit)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o) (_global_impure_ptr)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o (__libc_init_array)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o (memset)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o) (__call_exitprocs)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o) (atexit)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o) (__libc_fini_array)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o) (__register_exitproc)
+/usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+                              /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o) (_exit)
+
+Discarded input sections
+
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/main.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/simple_uart.o
+ .debug_macro   0x0000000000000000      0x832 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x22 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x87 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x44 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0xfd _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x22 _build/simple_uart.o
+ .debug_macro   0x0000000000000000      0x1df _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x22 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x3a _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x1f _build/simple_uart.o
+ .debug_macro   0x0000000000000000      0x242 _build/simple_uart.o
+ .debug_macro   0x0000000000000000      0x1d2 _build/simple_uart.o
+ .debug_macro   0x0000000000000000     0x746b _build/simple_uart.o
+ .debug_macro   0x0000000000000000      0x976 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x10 _build/simple_uart.o
+ .debug_macro   0x0000000000000000       0x22 _build/simple_uart.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x832 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x87 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x44 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0xfd _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x1df _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x52 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x35 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x9c _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x16 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x97 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x330 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0xf6 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x10 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x52 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x16 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x43 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x187 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x3a _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x10 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x40 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x6c _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x16 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x182 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x8e _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x16 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x1c _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x41 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x22 _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x3a _build/app_timer.o
+ .debug_macro   0x0000000000000000       0x1f _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x242 _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x1d2 _build/app_timer.o
+ .debug_macro   0x0000000000000000     0x746b _build/app_timer.o
+ .debug_macro   0x0000000000000000      0x976 _build/app_timer.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x832 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x22 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x35 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x9c _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x16 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x52 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x16 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x43 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x187 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x330 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x16 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x29 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0xfd _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x22 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x1df _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x22 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x3a _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x1f _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x242 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000      0x1d2 _build/nrf_soc.o
+ .debug_macro   0x0000000000000000       0x8e _build/nrf_soc.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .group         0x0000000000000000        0x8 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000      0x832 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x22 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x87 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x44 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0xfd _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x22 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000      0x1df _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x22 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x22 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x3a _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x1f _build/system_nrf51.o
+ .debug_macro   0x0000000000000000      0x242 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000      0x1d2 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000     0x746b _build/system_nrf51.o
+ .debug_macro   0x0000000000000000      0x976 _build/system_nrf51.o
+ .debug_macro   0x0000000000000000       0x10 _build/system_nrf51.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x0000000000000000 0x0000000000040000 xr
+RAM              0x0000000020000000 0x0000000000004000 xrw
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+LOAD _build/main.o
+LOAD _build/simple_uart.o
+LOAD _build/app_timer.o
+LOAD _build/nrf_soc.o
+LOAD _build/system_nrf51.o
+LOAD _build/gcc_startup_nrf51.o
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libm.a
+START GROUP
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/libgcc.a
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a
+END GROUP
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+START GROUP
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/libgcc.a
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a
+LOAD /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a
+END GROUP
+
+.text           0x0000000000000000     0x222c
+ *(.Vectors)
+ .Vectors       0x0000000000000000       0xc0 _build/gcc_startup_nrf51.o
+                0x0000000000000000                __Vectors
+ *(.text*)
+ .text          0x00000000000000c0        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+ .text          0x00000000000000c0       0x60 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+ .text          0x0000000000000120       0x78 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+                0x0000000000000120                _mainCRTStartup
+                0x0000000000000120                _start
+ .text          0x0000000000000198      0x280 _build/main.o
+                0x000000000000027c                app_error_handler
+                0x000000000000032c                RTC0_IRQHandler
+                0x0000000000000394                main
+ .text          0x0000000000000418      0x28c _build/simple_uart.o
+                0x000000000000049c                simple_uart_get
+                0x00000000000004cc                simple_uart_get_with_timeout
+                0x000000000000053c                simple_uart_put
+                0x000000000000057c                simple_uart_putstring
+                0x00000000000005cc                simple_uart_config
+ .text          0x00000000000006a4     0x1274 _build/app_timer.o
+                0x00000000000014f0                RTC1_IRQHandler
+                0x0000000000001540                SWI0_IRQHandler
+                0x0000000000001550                app_timer_init
+                0x00000000000016cc                app_timer_create
+                0x00000000000017bc                app_timer_start
+                0x000000000000184c                app_timer_stop
+                0x00000000000018ac                app_timer_stop_all
+                0x00000000000018d4                app_timer_cnt_get
+                0x00000000000018f0                app_timer_cnt_diff_compute
+ .text          0x0000000000001918      0x41c _build/nrf_soc.o
+                0x0000000000001b8c                sd_nvic_EnableIRQ
+                0x0000000000001bb0                sd_nvic_DisableIRQ
+                0x0000000000001bd4                sd_nvic_GetPendingIRQ
+                0x0000000000001c08                sd_nvic_SetPendingIRQ
+                0x0000000000001c2c                sd_nvic_ClearPendingIRQ
+                0x0000000000001c50                sd_nvic_SetPriority
+                0x0000000000001c80                sd_nvic_GetPriority
+                0x0000000000001cb8                sd_nvic_SystemReset
+                0x0000000000001cc8                sd_nvic_critical_region_enter
+                0x0000000000001cfc                sd_nvic_critical_region_exit
+ .text          0x0000000000001d34      0x124 _build/system_nrf51.o
+                0x0000000000001d34                SystemCoreClockUpdate
+                0x0000000000001d4c                SystemInit
+ .text          0x0000000000001e58       0x54 _build/gcc_startup_nrf51.o
+                0x0000000000001e58                Reset_Handler
+                0x0000000000001ea0                NMI_Handler
+                0x0000000000001ea2                HardFault_Handler
+                0x0000000000001ea4                SVC_Handler
+                0x0000000000001ea6                PendSV_Handler
+                0x0000000000001ea8                SysTick_Handler
+                0x0000000000001eaa                SWI4_IRQHandler
+                0x0000000000001eaa                TEMP_IRQHandler
+                0x0000000000001eaa                QDEC_IRQHandler
+                0x0000000000001eaa                UART0_IRQHandler
+                0x0000000000001eaa                SWI5_IRQHandler
+                0x0000000000001eaa                TIMER0_IRQHandler
+                0x0000000000001eaa                TIMER1_IRQHandler
+                0x0000000000001eaa                ECB_IRQHandler
+                0x0000000000001eaa                Default_Handler
+                0x0000000000001eaa                ADC_IRQHandler
+                0x0000000000001eaa                SWI3_IRQHandler
+                0x0000000000001eaa                CCM_AAR_IRQHandler
+                0x0000000000001eaa                WDT_IRQHandler
+                0x0000000000001eaa                SWI2_IRQHandler
+                0x0000000000001eaa                RNG_IRQHandler
+                0x0000000000001eaa                SPI1_TWI1_IRQHandler
+                0x0000000000001eaa                TIMER2_IRQHandler
+                0x0000000000001eaa                SWI1_IRQHandler
+                0x0000000000001eaa                SPI0_TWI0_IRQHandler
+                0x0000000000001eaa                GPIOTE_IRQHandler
+                0x0000000000001eaa                POWER_CLOCK_IRQHandler
+                0x0000000000001eaa                RADIO_IRQHandler
+                0x0000000000001eaa                LPCOMP_IRQHandler
+ .text          0x0000000000001eac        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+ .text.exit     0x0000000000001eac       0x20 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+                0x0000000000001eac                exit
+ .text          0x0000000000001ecc        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+ .text          0x0000000000001ecc        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+ .text.__libc_init_array
+                0x0000000000001ecc       0x48 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+                0x0000000000001ecc                __libc_init_array
+ .text          0x0000000000001f14        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+ .text.memset   0x0000000000001f14       0x8c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+                0x0000000000001f14                memset
+ .text          0x0000000000001fa0        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .text.startup.register_fini
+                0x0000000000001fa0       0x18 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .text.__call_exitprocs
+                0x0000000000001fb8       0xfc /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+                0x0000000000001fb8                __call_exitprocs
+ .text          0x00000000000020b4        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+ .text.atexit   0x00000000000020b4       0x10 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+                0x00000000000020b4                atexit
+ .text          0x00000000000020c4        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+ .text.__libc_fini_array
+                0x00000000000020c4       0x34 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+                0x00000000000020c4                __libc_fini_array
+ .text          0x00000000000020f8        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+ .text.__register_exitproc
+                0x00000000000020f8       0xd4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+                0x00000000000020f8                __register_exitproc
+ .text          0x00000000000021cc        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+ .text          0x00000000000021cc        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ .text          0x00000000000021cc        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+ .text._exit    0x00000000000021cc        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+                0x00000000000021cc                _exit
+ *(.init)
+ .init          0x00000000000021d0        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+                0x00000000000021d0                _init
+ .init          0x00000000000021d4        0x8 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ *(.fini)
+ .fini          0x00000000000021dc        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+                0x00000000000021dc                _fini
+ .fini          0x00000000000021e0        0x8 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+ *(.rodata*)
+ .rodata        0x00000000000021e8        0xa _build/main.o
+ *fill*         0x00000000000021f2        0x2 
+ .rodata        0x00000000000021f4       0x2b _build/app_timer.o
+ *fill*         0x000000000000221f        0x1 
+ .rodata.str1.4
+                0x0000000000002220        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+                                          0x2 (size before relaxing)
+ .rodata._global_impure_ptr
+                0x0000000000002224        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+                0x0000000000002224                _global_impure_ptr
+ *(.eh_frame*)
+ .eh_frame      0x0000000000002228        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+ .eh_frame      0x0000000000002228        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+
+.glue_7         0x000000000000222c        0x0
+ .glue_7        0x000000000000222c        0x0 linker stubs
+
+.glue_7t        0x000000000000222c        0x0
+ .glue_7t       0x000000000000222c        0x0 linker stubs
+
+.vfp11_veneer   0x000000000000222c        0x0
+ .vfp11_veneer  0x000000000000222c        0x0 linker stubs
+
+.v4_bx          0x000000000000222c        0x0
+ .v4_bx         0x000000000000222c        0x0 linker stubs
+
+.iplt           0x000000000000222c        0x0
+ .iplt          0x000000000000222c        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+
+.ARM.extab      0x000000000000222c        0x0
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+ .ARM.extab     0x000000000000222c        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.extab     0x000000000000222c        0x0 _build/gcc_startup_nrf51.o
+                0x000000000000222c                __exidx_start = .
+
+.ARM.exidx      0x000000000000222c        0x8
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+ .ARM.exidx     0x000000000000222c        0x8 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.exidx     0x0000000000002234        0x0 _build/gcc_startup_nrf51.o
+                                          0x8 (size before relaxing)
+                0x0000000000002234                __exidx_end = .
+                0x0000000000002234                __etext = .
+
+.rel.dyn        0x0000000000002234        0x0
+ .rel.iplt      0x0000000000002234        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+
+.data           0x0000000020000000      0x444 load address 0x0000000000002234
+                0x0000000020000000                __data_start__ = .
+ *(vtable)
+ *(.data*)
+ .data          0x0000000020000000        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+ .data          0x0000000020000000        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+                0x0000000020000000                __dso_handle
+ .data          0x0000000020000004        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .data          0x0000000020000004        0x0 _build/main.o
+ .data          0x0000000020000004        0x0 _build/simple_uart.o
+ .data          0x0000000020000004        0x0 _build/app_timer.o
+ .data          0x0000000020000004        0x0 _build/nrf_soc.o
+ .data          0x0000000020000004        0x4 _build/system_nrf51.o
+                0x0000000020000004                SystemCoreClock
+ .data          0x0000000020000008        0x0 _build/gcc_startup_nrf51.o
+ .data          0x0000000020000008        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+ .data          0x0000000020000008        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+ .data.impure_data
+                0x0000000020000008      0x428 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x0000000020000430        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+                0x0000000020000430                _impure_ptr
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ .data          0x0000000020000434        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+                0x0000000020000434                . = ALIGN (0x4)
+                0x0000000020000434                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array)
+                0x0000000020000434                PROVIDE (__preinit_array_end, .)
+                0x0000000020000434                . = ALIGN (0x4)
+                0x0000000020000434                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ .init_array.00000
+                0x0000000020000434        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ *(.init_array)
+ .init_array    0x0000000020000438        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+                0x000000002000043c                PROVIDE (__init_array_end, .)
+                0x000000002000043c                . = ALIGN (0x4)
+                0x000000002000043c                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array)
+ .fini_array    0x000000002000043c        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+                0x0000000020000440                PROVIDE (__fini_array_end, .)
+ *(.jcr)
+ .jcr           0x0000000020000440        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+ .jcr           0x0000000020000440        0x4 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+                0x0000000020000444                . = ALIGN (0x4)
+                0x0000000020000444                __data_end__ = .
+
+.igot.plt       0x0000000020000444        0x0 load address 0x0000000000002678
+ .igot.plt      0x0000000020000444        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+
+.bss            0x0000000020000444      0x2fc load address 0x0000000000002678
+                0x0000000020000444                . = ALIGN (0x4)
+                0x0000000020000444                __bss_start__ = .
+ *(.bss*)
+ .bss           0x0000000020000444        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+ .bss           0x0000000020000444       0x1c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+ .bss           0x0000000020000460        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .bss           0x0000000020000460      0x2b4 _build/main.o
+ .bss           0x0000000020000714        0x0 _build/simple_uart.o
+ .bss           0x0000000020000714       0x29 _build/app_timer.o
+ .bss           0x000000002000073d        0x1 _build/nrf_soc.o
+ .bss           0x000000002000073e        0x0 _build/system_nrf51.o
+ .bss           0x000000002000073e        0x0 _build/gcc_startup_nrf51.o
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ .bss           0x000000002000073e        0x0 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+ *(COMMON)
+                0x0000000020000740                . = ALIGN (0x4)
+ *fill*         0x000000002000073e        0x2 
+                0x0000000020000740                __bss_end__ = .
+
+.heap           0x0000000020000740      0x800
+                0x0000000020000740                __end__ = .
+                0x0000000020000740                end = __end__
+ *(.heap*)
+ .heap          0x0000000020000740      0x800 _build/gcc_startup_nrf51.o
+                0x0000000020000740                __HeapBase
+                0x0000000020000f40                __HeapLimit = .
+
+.stack_dummy    0x0000000020000740      0x800
+ *(.stack*)
+ .stack         0x0000000020000740      0x800 _build/gcc_startup_nrf51.o
+                0x0000000020004000                __StackTop = (ORIGIN (RAM) + LENGTH (RAM))
+                0x0000000020003800                __StackLimit = (__StackTop - SIZEOF (.stack_dummy))
+                0x0000000020004000                PROVIDE (__stack, __StackTop)
+                0x0000000000000001                ASSERT ((__StackLimit >= __HeapLimit), region RAM overflowed with stack)
+OUTPUT(_build/app_timer_example_xxaa.out elf32-littlearm)
+
+.ARM.attributes
+                0x0000000000000000       0x28
+ .ARM.attributes
+                0x0000000000000000       0x1e /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crti.o
+ .ARM.attributes
+                0x000000000000001e       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtbegin.o
+ .ARM.attributes
+                0x000000000000004a       0x1b /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.attributes
+                0x0000000000000065       0x31 _build/main.o
+ .ARM.attributes
+                0x0000000000000096       0x31 _build/simple_uart.o
+ .ARM.attributes
+                0x00000000000000c7       0x31 _build/app_timer.o
+ .ARM.attributes
+                0x00000000000000f8       0x31 _build/nrf_soc.o
+ .ARM.attributes
+                0x0000000000000129       0x31 _build/system_nrf51.o
+ .ARM.attributes
+                0x000000000000015a       0x1b _build/gcc_startup_nrf51.o
+ .ARM.attributes
+                0x0000000000000175       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+ .ARM.attributes
+                0x00000000000001a1       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-impure.o)
+ .ARM.attributes
+                0x00000000000001cd       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+ .ARM.attributes
+                0x00000000000001f9       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+ .ARM.attributes
+                0x0000000000000225       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .ARM.attributes
+                0x0000000000000251       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+ .ARM.attributes
+                0x000000000000027d       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+ .ARM.attributes
+                0x00000000000002a9       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+ .ARM.attributes
+                0x00000000000002d5       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtend.o
+ .ARM.attributes
+                0x0000000000000301       0x1e /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/armv6-m/crtn.o
+ .ARM.attributes
+                0x000000000000031f       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+
+.comment        0x0000000000000000       0x6e
+ .comment       0x0000000000000000       0x6e _build/main.o
+                                         0x6f (size before relaxing)
+ .comment       0x000000000000006e       0x6f _build/simple_uart.o
+ .comment       0x000000000000006e       0x6f _build/app_timer.o
+ .comment       0x000000000000006e       0x6f _build/nrf_soc.o
+ .comment       0x000000000000006e       0x6f _build/system_nrf51.o
+
+.debug_info     0x0000000000000000     0x2b36
+ .debug_info    0x0000000000000000      0x83f _build/main.o
+ .debug_info    0x000000000000083f      0x6af _build/simple_uart.o
+ .debug_info    0x0000000000000eee     0x1354 _build/app_timer.o
+ .debug_info    0x0000000000002242      0x689 _build/nrf_soc.o
+ .debug_info    0x00000000000028cb      0x1b6 _build/system_nrf51.o
+ .debug_info    0x0000000000002a81       0xb5 _build/gcc_startup_nrf51.o
+
+.debug_abbrev   0x0000000000000000      0x990
+ .debug_abbrev  0x0000000000000000      0x1fe _build/main.o
+ .debug_abbrev  0x00000000000001fe      0x192 _build/simple_uart.o
+ .debug_abbrev  0x0000000000000390      0x333 _build/app_timer.o
+ .debug_abbrev  0x00000000000006c3      0x1c5 _build/nrf_soc.o
+ .debug_abbrev  0x0000000000000888       0xf4 _build/system_nrf51.o
+ .debug_abbrev  0x000000000000097c       0x14 _build/gcc_startup_nrf51.o
+
+.debug_aranges  0x0000000000000000       0xc0
+ .debug_aranges
+                0x0000000000000000       0x20 _build/main.o
+ .debug_aranges
+                0x0000000000000020       0x20 _build/simple_uart.o
+ .debug_aranges
+                0x0000000000000040       0x20 _build/app_timer.o
+ .debug_aranges
+                0x0000000000000060       0x20 _build/nrf_soc.o
+ .debug_aranges
+                0x0000000000000080       0x20 _build/system_nrf51.o
+ .debug_aranges
+                0x00000000000000a0       0x20 _build/gcc_startup_nrf51.o
+
+.debug_macro    0x0000000000000000     0xa740
+ .debug_macro   0x0000000000000000      0x28e _build/main.o
+ .debug_macro   0x000000000000028e      0x832 _build/main.o
+ .debug_macro   0x0000000000000ac0       0x22 _build/main.o
+ .debug_macro   0x0000000000000ae2       0x22 _build/main.o
+ .debug_macro   0x0000000000000b04       0x3a _build/main.o
+ .debug_macro   0x0000000000000b3e       0x22 _build/main.o
+ .debug_macro   0x0000000000000b60       0x87 _build/main.o
+ .debug_macro   0x0000000000000be7       0x44 _build/main.o
+ .debug_macro   0x0000000000000c2b       0xfd _build/main.o
+ .debug_macro   0x0000000000000d28       0x22 _build/main.o
+ .debug_macro   0x0000000000000d4a      0x1df _build/main.o
+ .debug_macro   0x0000000000000f29       0x1f _build/main.o
+ .debug_macro   0x0000000000000f48      0x242 _build/main.o
+ .debug_macro   0x000000000000118a      0x1d2 _build/main.o
+ .debug_macro   0x000000000000135c     0x746b _build/main.o
+ .debug_macro   0x00000000000087c7      0x976 _build/main.o
+ .debug_macro   0x000000000000913d       0x10 _build/main.o
+ .debug_macro   0x000000000000914d       0x52 _build/main.o
+ .debug_macro   0x000000000000919f       0x35 _build/main.o
+ .debug_macro   0x00000000000091d4       0x9c _build/main.o
+ .debug_macro   0x0000000000009270       0x16 _build/main.o
+ .debug_macro   0x0000000000009286       0x97 _build/main.o
+ .debug_macro   0x000000000000931d      0x330 _build/main.o
+ .debug_macro   0x000000000000964d       0xf6 _build/main.o
+ .debug_macro   0x0000000000009743       0x10 _build/main.o
+ .debug_macro   0x0000000000009753       0x52 _build/main.o
+ .debug_macro   0x00000000000097a5       0x16 _build/main.o
+ .debug_macro   0x00000000000097bb       0x43 _build/main.o
+ .debug_macro   0x00000000000097fe      0x187 _build/main.o
+ .debug_macro   0x0000000000009985       0x22 _build/main.o
+ .debug_macro   0x00000000000099a7       0x3a _build/main.o
+ .debug_macro   0x00000000000099e1       0x10 _build/main.o
+ .debug_macro   0x00000000000099f1       0x40 _build/main.o
+ .debug_macro   0x0000000000009a31       0x6c _build/main.o
+ .debug_macro   0x0000000000009a9d       0x16 _build/main.o
+ .debug_macro   0x0000000000009ab3      0x182 _build/main.o
+ .debug_macro   0x0000000000009c35       0x8e _build/main.o
+ .debug_macro   0x0000000000009cc3       0x16 _build/main.o
+ .debug_macro   0x0000000000009cd9       0x22 _build/main.o
+ .debug_macro   0x0000000000009cfb       0x1c _build/main.o
+ .debug_macro   0x0000000000009d17       0x41 _build/main.o
+ .debug_macro   0x0000000000009d58       0x58 _build/main.o
+ .debug_macro   0x0000000000009db0       0xf7 _build/simple_uart.o
+ .debug_macro   0x0000000000009ea7      0x2d8 _build/app_timer.o
+ .debug_macro   0x000000000000a17f       0x1c _build/app_timer.o
+ .debug_macro   0x000000000000a19b       0x16 _build/app_timer.o
+ .debug_macro   0x000000000000a1b1       0x35 _build/app_timer.o
+ .debug_macro   0x000000000000a1e6       0x16 _build/app_timer.o
+ .debug_macro   0x000000000000a1fc       0x29 _build/app_timer.o
+ .debug_macro   0x000000000000a225       0x1c _build/app_timer.o
+ .debug_macro   0x000000000000a241      0x169 _build/nrf_soc.o
+ .debug_macro   0x000000000000a3aa       0x4c _build/nrf_soc.o
+ .debug_macro   0x000000000000a3f6       0x8d _build/nrf_soc.o
+ .debug_macro   0x000000000000a483      0x10e _build/nrf_soc.o
+ .debug_macro   0x000000000000a591       0x86 _build/nrf_soc.o
+ .debug_macro   0x000000000000a617       0x4a _build/nrf_soc.o
+ .debug_macro   0x000000000000a661       0xdf _build/system_nrf51.o
+
+.debug_line     0x0000000000000000     0x1665
+ .debug_line    0x0000000000000000      0x4bf _build/main.o
+ .debug_line    0x00000000000004bf      0x340 _build/simple_uart.o
+ .debug_line    0x00000000000007ff      0x722 _build/app_timer.o
+ .debug_line    0x0000000000000f21      0x3be _build/nrf_soc.o
+ .debug_line    0x00000000000012df      0x2f1 _build/system_nrf51.o
+ .debug_line    0x00000000000015d0       0x95 _build/gcc_startup_nrf51.o
+
+.debug_str      0x0000000000000000    0x34669
+ .debug_str     0x0000000000000000    0x334e0 _build/main.o
+                                      0x336fd (size before relaxing)
+ .debug_str     0x00000000000334e0      0x2ad _build/simple_uart.o
+                                      0x2f02e (size before relaxing)
+ .debug_str     0x000000000003378d      0xc2b _build/app_timer.o
+                                      0x33fb0 (size before relaxing)
+ .debug_str     0x00000000000343b8      0x1ac _build/nrf_soc.o
+                                       0x7ca8 (size before relaxing)
+ .debug_str     0x0000000000034564      0x105 _build/system_nrf51.o
+                                      0x2eda5 (size before relaxing)
+
+.debug_frame    0x0000000000000000      0xbf8
+ .debug_frame   0x0000000000000000      0x164 _build/main.o
+ .debug_frame   0x0000000000000164      0x110 _build/simple_uart.o
+ .debug_frame   0x0000000000000274      0x534 _build/app_timer.o
+ .debug_frame   0x00000000000007a8      0x24c _build/nrf_soc.o
+ .debug_frame   0x00000000000009f4       0x80 _build/system_nrf51.o
+ .debug_frame   0x0000000000000a74       0x28 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-exit.o)
+ .debug_frame   0x0000000000000a9c       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-init.o)
+ .debug_frame   0x0000000000000ac8       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-memset.o)
+ .debug_frame   0x0000000000000af4       0x54 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__call_atexit.o)
+ .debug_frame   0x0000000000000b48       0x28 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-atexit.o)
+ .debug_frame   0x0000000000000b70       0x2c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-fini.o)
+ .debug_frame   0x0000000000000b9c       0x3c /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libc.a(lib_a-__atexit.o)
+ .debug_frame   0x0000000000000bd8       0x20 /usr/local/gcc-arm-none-eabi-5_3-2016q1/bin/../lib/gcc/arm-none-eabi/5.3.1/../../../../arm-none-eabi/lib/armv6-m/libnosys.a(_exit.o)
+
+.debug_ranges   0x0000000000000000       0x18
+ .debug_ranges  0x0000000000000000       0x18 _build/app_timer.o
