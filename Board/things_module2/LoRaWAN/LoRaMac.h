@@ -48,6 +48,13 @@
 
 // Includes board dependent definitions such as channels frequencies
 #include "LoRaMac-board.h"
+#include <string.h>
+#include <stdbool.h>
+#include "inttypes.h"
+#include "app_util_platform.h"
+#include "app_error.h"
+
+ typedef uint64_t TimerTime_t;
 
 /*!
  * Beacon interval in us
@@ -1673,7 +1680,33 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t *mlmeRequest );
  *          \ref LORAMAC_STATUS_LENGTH_ERROR,
  *          \ref LORAMAC_STATUS_DEVICE_OFF.
  */
-LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t *mcpsRequest );
+LoRaMacStatus_t LoRaMacMcpsRequest( );
+
+
+/*!
+ * \brief Function executed on Resend Frame timer event.
+ */
+extern void OnMacStateCheckTimerEvent( void *p_context );
+
+/*!
+ * \brief Function executed on duty cycle delayed Tx  timer event
+ */
+extern void OnTxDelayedTimerEvent( void *p_context );
+
+/*!
+ * \brief Function executed on first Rx window timer event
+ */
+extern void OnRxWindow1TimerEvent( void *p_context );
+
+/*!
+ * \brief Function executed on second Rx window timer event
+ */
+extern void OnRxWindow2TimerEvent( void *p_context );
+
+/*!
+ * \brief Function executed on AckTimeout timer event
+ */
+extern void OnAckTimeoutTimerEvent( void *p_context );
 
 /*! \} defgroup LORAMAC */
 
