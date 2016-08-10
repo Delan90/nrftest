@@ -14,7 +14,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 */
 #ifndef __LORAMAC_BOARD_H__
 #define __LORAMAC_BOARD_H__
-
+#include "main.h"
 /*!
  * Returns individual channel mask
  *
@@ -278,7 +278,7 @@ Maintainer: Miguel Luis and Gregory Cristian
  * Second reception window channel definition.
  */
 // Channel = { Frequency [Hz], Datarate }
-#define RX_WND_2_CHANNEL                                  { 869525000, DR_0 }
+#define RX_WND_2_CHANNEL                                  { 869525000, DR_3 }
 
 /*!
  * LoRaMac maximum number of bands

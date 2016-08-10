@@ -37,7 +37,31 @@ DEALINGS WITH THE SOFTWARE
 #define _CMAC_H_
 
 #include "aes.h" 
-  
+
+ /*!
+ * \brief Returns the minimum value betwen a and b
+ *
+ * \param [IN] a 1st value
+ * \param [IN] b 2nd value
+ * \retval minValue Minimum value
+ */
+#define MIN( a, b ) ( ( ( a ) < ( b ) ) ? ( a ) : ( b ) )
+
+static void memcpy1( uint8_t *dst, const uint8_t *src, uint16_t size )
+{
+    while( size-- )
+    {
+        *dst++ = *src++;
+    }
+}
+
+static void memset1( uint8_t *dst, uint8_t value, uint16_t size )
+{
+    while( size-- )
+    {
+        *dst++ = value;
+    }
+}
 #define AES_CMAC_KEY_LENGTH     16
 #define AES_CMAC_DIGEST_LENGTH  16
  
