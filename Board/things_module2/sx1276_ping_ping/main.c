@@ -25,6 +25,12 @@
 #include "radio.h"
 #include "SEGGER_RTT.h"
 
+
+#define led0   25
+#define led1   26
+#define led2   27
+#define ledstart led0
+#define ledstop  led1
 #define RX_TIMEOUT_VALUE                            5000
 #define BUFFER_SIZE                                 64 // Define the payload size here 
 
@@ -66,7 +72,7 @@ int8_t SnrValue = 0;
 void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
 {
     //Set LED2 high to indicate that error has occurred.
-    nrf_gpio_pin_toggle(LED_2);
+    nrf_gpio_pin_toggle(led2);
     SEGGER_RTT_printf(0,"Died at %d line with error code %d in file %s\n",line_num,error_code,p_file_name);
     for (;;)
     {
@@ -80,7 +86,7 @@ int main(void)
     SEGGER_RTT_WriteString(0, "Ping Pong Start!\n");
 
     //Configure all LEDs as outputs. 
-    nrf_gpio_range_cfg_output(LED_START, LED_STOP);
+    nrf_gpio_range_cfg_output(ledstart, ledstop);
         
     bool isMaster = true;
     uint8_t i;
@@ -109,7 +115,9 @@ int main(void)
         switch( State )
         {
         case RX:
-            SEGGER_RTT_WriteString(0,"Receive Done State\n");
+            SEGGER_RTT_WriteString(0,"**********************************\n");
+            SEGGER_RTT_WriteString(0,"Receive Done State!!!!!!!!!!!!!!!!\n");
+            SEGGER_RTT_WriteString(0,"**********************************\n");
             if( isMaster == true )
             {
                 if( BufferSize > 0 )
@@ -117,7 +125,7 @@ int main(void)
                     if( strncmp( ( const char* )Buffer, ( const char* )PongMsg, 4 ) == 0 )
                     {
                         // Indicates on a LED that the received frame is a PONG
-                        nrf_gpio_pin_toggle(LED_1);
+                        nrf_gpio_pin_toggle(led1);
 
                         // Send the next PING frame            
                         Buffer[0] = 'P';
@@ -135,7 +143,7 @@ int main(void)
                     else if( strncmp( ( const char* )Buffer, ( const char* )PingMsg, 4 ) == 0 )
                     { // A master already exists then become a slave
                         isMaster = false;
-                        nrf_gpio_pin_toggle(LED_1);
+                        nrf_gpio_pin_toggle(led1);
                         Radio.Rx( RX_TIMEOUT_VALUE );
                     }
                     else // valid reception but neither a PING or a PONG message
@@ -152,7 +160,7 @@ int main(void)
                     if( strncmp( ( const char* )Buffer, ( const char* )PingMsg, 4 ) == 0 )
                     {
                         // Indicates on a LED that the received frame is a PING
-                        nrf_gpio_pin_toggle(LED_1);
+                        nrf_gpio_pin_toggle(led1);
 
                         // Send the reply to the PONG string
                         Buffer[0] = 'P';
@@ -177,10 +185,12 @@ int main(void)
             State = LOWPOWER;
             break;
         case TX:
-            SEGGER_RTT_WriteString(0,"TXDONE State\n");
+            SEGGER_RTT_WriteString(0,"**********************************\n");
+            SEGGER_RTT_WriteString(0,"TXDONE State!!!!!!!!!!!!!!!!!!!!\n");
+            SEGGER_RTT_WriteString(0,"**********************************\n");
             // Indicates on a LED that we have sent a PING [Master]
             // Indicates on a LED that we have sent a PONG [Slave]
-            nrf_gpio_pin_toggle(LED_0);
+            nrf_gpio_pin_toggle(led0);
             Radio.Rx( RX_TIMEOUT_VALUE );
             State = LOWPOWER;
             break;

@@ -16,6 +16,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define __RADIO_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define RADIO_INIT_REGISTERS_VALUE                \
 {                                                 \
@@ -43,7 +44,7 @@ Maintainer: Miguel Luis and Gregory Cristian
  */
 typedef enum
 {
-    MODEM_FSK = 0,
+    MODEM_FSK ,
     MODEM_LORA,
 }RadioModems_t;
 
@@ -52,11 +53,59 @@ typedef enum
  */
 typedef enum
 {
-    RF_IDLE = 0,
+    RF_IDLE ,
     RF_RX_RUNNING,
     RF_TX_RUNNING,
     RF_CAD,
 }RadioState_t;
+
+/*!
+ * \brief Radio driver callback functions
+ */
+typedef struct
+{
+    /*!
+     * \brief  Tx Done callback prototype.
+     */
+    void    ( *TxDone )( void );
+    /*!
+     * \brief  Tx Timeout callback prototype.
+     */
+    void    ( *TxTimeout )( void );
+    /*!
+     * \brief Rx Done callback prototype.
+     *
+     * \param [IN] payload Received buffer pointer
+     * \param [IN] size    Received buffer size
+     * \param [IN] rssi    RSSI value computed while receiving the frame [dBm]
+     * \param [IN] snr     Raw SNR value given by the radio hardware
+     *                     FSK : N/A ( set to 0 )
+     *                     LoRa: SNR value in dB
+     */
+    void    ( *RxDone )( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr );
+    /*!
+     * \brief  Rx Timeout callback prototype.
+     */
+    void    ( *RxTimeout )( void );
+    /*!
+     * \brief Rx Error callback prototype.
+     */
+    void    ( *RxError )( void );
+    /*!
+     * \brief  FHSS Change Channel callback prototype.
+     *
+     * \param [IN] currentChannel   Index number of the current channel
+     */
+    void ( *FhssChangeChannel )( uint8_t currentChannel );
+
+    /*!
+     * \brief CAD Done callback prototype.
+     *
+     * \param [IN] channelDetected    Channel Activity detected during the CAD
+     */
+    void ( *CadDone ) ( bool channelActivityDetected );
+}RadioEvents_t;
+
 
 /*!
  * \brief Radio driver definition
@@ -195,6 +244,14 @@ struct Radio_s
                               bool fixLen, bool crcOn, bool FreqHopOn,
                               uint8_t HopPeriod, bool iqInverted, uint32_t timeout );
     /*!
+     * \brief Checks if the given RF frequency is supported by the hardware
+     *
+     * \param [IN] frequency RF frequency to be checked
+     * \retval isSupported [true: supported, false: unsupported]
+     */
+    bool    ( *CheckRfFrequency )( uint32_t frequency );
+    
+    /*!
      * \brief Computes the packet time on air in us for the given payload
      *
      * \Remark Can only be called once SetRxConfig or SetTxConfig have been called
@@ -295,8 +352,12 @@ extern const struct Radio_s Radio;
  */
 
 
+
+
+
 typedef enum
 {
+    INIT,
     LOWPOWER,
     RX,
     RX_TIMEOUT,

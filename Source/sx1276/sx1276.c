@@ -27,6 +27,10 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include "spi_master.h"
 #include "SEGGER_RTT.h"
 
+#include "include.h"
+#include "main.h"
+//#include "timer_main.h"
+ 
 /*
  * Local types definition
  */
@@ -61,6 +65,7 @@ const struct Radio_s Radio =
     SX1276Random,
     SX1276SetRxConfig,
     SX1276SetTxConfig,
+    SX1276CheckRfFrequency,
     SX1276GetTimeOnAir,
     SX1276Send,
     SX1276SetSleep,
@@ -77,14 +82,6 @@ const struct Radio_s Radio =
 };
 
 
-#define APP_TIMER_PRESCALER             0 /**< Value of the RTC1 PRESCALER register. */
-#define APP_TIMER_MAX_TIMERS            4 /**< Maximum number of simultaneously created timers. */
-#define APP_TIMER_OP_QUEUE_SIZE         5 /**< Size of timer operation queues. */
-
-// Scheduler settings
-#define SCHED_MAX_EVENT_DATA_SIZE       2
-#define SCHED_QUEUE_SIZE                5
-
 static volatile bool m_transfer_completed = true; /**< A flag to inform about completed transfer. */
 
 #if defined(SPI_MASTER_0_ENABLE)
@@ -93,7 +90,10 @@ static volatile bool m_transfer_completed = true; /**< A flag to inform about co
     #define SPI_MASTER_HW SPI_MASTER_1
 #endif
 
-#define TX_RX_BUF_LENGTH    4u     /**< SPI transaction buffer length. */
+
+
+
+#define TX_RX_BUF_LENGTH    100u     /**< SPI transaction buffer length. */
 #define DELAY_MS            1000u    /**< Timer delay in milliseconds. */
 
 static uint8_t m_tx_data[TX_RX_BUF_LENGTH] = {0}; /**< A buffer with data to transfer. */
@@ -152,11 +152,13 @@ void SX1276SetOpMode( uint8_t opMode );
  * \brief DIO 0 IRQ callback
  */
 void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size );
+//void SX1276OnDio0Irq( void);
 
 /*!
  * \brief DIO 1 IRQ callback
  */
 void SX1276OnDio1Irq( void * p_event_data, uint16_t event_size );
+//void SX1276OnDio1Irq( void);
 
 /*!
  * \brief DIO 2 IRQ callback
@@ -181,9 +183,23 @@ void SX1276OnDio5Irq( void * p_event_data, uint16_t event_size );
 /*!
  * \brief Tx & Rx timeout timer callback
  */
-static void SX1276OnTimeoutIrq( void *p_context);
+void SX1276OnTimeoutIrq( void *p_context);
 
 void SX1276SetAntSwLowPower( bool status );
+
+
+/*!
+ * \brief Initializes the RF Switch I/Os pins interface
+ */
+void SX1276AntSwInit( void );
+
+/*!
+ * \brief De-initializes the RF Switch I/Os pins interface 
+ *
+ * \remark Needed to decrease the power consumption in MCU lowpower modes
+ */
+void SX1276AntSwDeInit( void );
+
 
 void SX1276SetAntSw( uint8_t rxTx );
 
@@ -242,7 +258,7 @@ const FskBandwidth_t FskBandwidths[] =
 /*!
  * Radio callbacks variable
  */
-// static RadioEvents_t *RadioEvents;
+ //static RadioEvents_t *RadioEvents;
 
 /*!
  * Reception buffer
@@ -268,12 +284,9 @@ SX1276_t SX1276;
 uint32_t AntSwitchLf = 28;
 uint32_t AntSwitchHf = 29;
 
-/*!
- * Tx and Rx timers
- */
-static app_timer_id_t   tx_timeout_timer;
-static app_timer_id_t   rx_timeout_timer;
-static app_timer_id_t   rx_timeout_sync_word;
+
+static bool RadioIsActive = false;
+
 
 /*
  * Radio driver functions implementation
@@ -293,7 +306,9 @@ void gpio_interrupts(){
 
     NRF_GPIOTE->INTENSET  = GPIOTE_INTENSET_IN0_Set << GPIOTE_INTENSET_IN0_Pos;
     NRF_GPIOTE->INTENSET  = GPIOTE_INTENSET_IN1_Set << GPIOTE_INTENSET_IN1_Pos;
+   // NVIC_SetPriority(GPIOTE_IRQn,2);
     NVIC_EnableIRQ(GPIOTE_IRQn);
+    SEGGER_RTT_printf(0, "NVIC_GetPriority(GPIOTE_IRQn) :%d \r\n",  NVIC_GetPriority(GPIOTE_IRQn));
 }
 
 /*
@@ -308,64 +323,22 @@ void GPIOTE_IRQHandler(void)
     {
         NRF_GPIOTE->EVENTS_IN[0] = 0;
         SEGGER_RTT_WriteString(0,"DIO0 Interrupt Handler\n");
+
         app_sched_event_put(NULL, 0, SX1276OnDio0Irq);    /* Scheduler for DIO0 */
+
+        SEGGER_RTT_WriteString(0,"DIO0 Interrupt END\n");
+
     }else if ((NRF_GPIOTE->EVENTS_IN[1] == 1) && 
         (NRF_GPIOTE->INTENSET & GPIOTE_INTENSET_IN1_Msk))
     {
         NRF_GPIOTE->EVENTS_IN[1] = 0;
         SEGGER_RTT_WriteString(0,"DIO1 Interrupt Handler\n");
         app_sched_event_put(NULL, 0, SX1276OnDio1Irq);   /* Scheduler for DIO1 */
+        SEGGER_RTT_WriteString(0,"DIO1 Interrupt END\n");
     }
     nrf_gpio_pin_toggle(LED_0);
 }
 
-/** Starting the internal LFCLK RC oscillator.
- */
-static void lfclk_config(void)
-{
-    NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_RC << CLOCK_LFCLKSRC_SRC_Pos);
-    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-    NRF_CLOCK->TASKS_LFCLKSTART    = 1;
-    while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
-    {
-        //Do nothing.
-    }
-    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
-    SEGGER_RTT_WriteString(0,"Started LFCLK RC oscillator!\n");
-}
-
-/*
- * Timer initialization.
- */
-
-static void timers_init(void)
-{   
-    uint32_t err_code;
-
-    lfclk_config();
-
-    // Initialize timer module.
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, false);
-
-    // Initialize driver timeout timers
-    err_code = app_timer_create(&tx_timeout_timer,
-                                APP_TIMER_MODE_SINGLE_SHOT,
-                                SX1276OnTimeoutIrq);    
-    APP_ERROR_CHECK(err_code);    
-
-     err_code = app_timer_create(&rx_timeout_timer,
-                                APP_TIMER_MODE_SINGLE_SHOT,
-                                SX1276OnTimeoutIrq);
-    APP_ERROR_CHECK(err_code); 
-
-    err_code = app_timer_create(&rx_timeout_sync_word,
-                                APP_TIMER_MODE_SINGLE_SHOT,
-                                SX1276OnTimeoutIrq);
-    APP_ERROR_CHECK(err_code); 
-
-    // Initialize scheduler module
-    APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
-}
 
 /* Prepares buffers and starts data transfer.
  *
@@ -406,24 +379,34 @@ static __INLINE bool buf_print(uint8_t * p_buf, uint16_t len)
  * Initializing a SPI master driver.
  */
 
-static uint32_t spi_master_init(void)
+static void spi_master_init(void)
 {
+    uint32_t err_code;
+
     spi_master_config_t spi_config = SPI_MASTER_SX1276;
     
     #if defined(SPI_MASTER_0_ENABLE)
-    SEGGER_RTT_WriteString(0,"SPI MASTER INIT!\n");
+    SEGGER_RTT_WriteString(0,"SPI0 MASTER INIT!\n");
         spi_config.SPI_Pin_SCK = SPIM0_SCK_PIN;
         spi_config.SPI_Pin_MISO = SPIM0_MISO_PIN;
         spi_config.SPI_Pin_MOSI = SPIM0_MOSI_PIN;
         spi_config.SPI_Pin_SS = SPIM0_SS_PIN;
     #elif defined(SPI_MASTER_1_ENABLE)
+    SEGGER_RTT_WriteString(0,"SPI1 MASTER INIT!\n");
         spi_config.SPI_Pin_SCK = SPIM1_SCK_PIN;
         spi_config.SPI_Pin_MISO = SPIM1_MISO_PIN;
         spi_config.SPI_Pin_MOSI = SPIM1_MOSI_PIN;
         spi_config.SPI_Pin_SS = SPIM1_SS_PIN;
     #endif /* SPI_MASTER_ENABLE */
     
-    return spi_master_open(SPI_MASTER_HW, &spi_config);
+    err_code = spi_master_open(SPI_MASTER_HW, &spi_config);
+    APP_ERROR_CHECK(err_code);
+
+
+    spi_master_evt_handler_reg(SPI_MASTER_HW, spi_master_event_handler);
+
+    SEGGER_RTT_printf(0, "NVIC_GetPriority(SPI0_TWI0_IRQn) :%d \r\n",  NVIC_GetPriority(SPI0_TWI0_IRQn));
+    SEGGER_RTT_printf(0, "NVIC_GetPriority(SPI1_TWI1_IRQn) :%d \r\n",  NVIC_GetPriority(SPI1_TWI1_IRQn));
 }
 
 /* SPI master event callback.
@@ -436,6 +419,7 @@ static void spi_master_event_handler(spi_master_evt_t spi_master_evt)
 {
     switch (spi_master_evt.evt_type)
     {
+        SEGGER_RTT_WriteString(0,"SPI_MASTER_EVT_TRANSFER_COMPLETED\n");
         case SPI_MASTER_EVT_TRANSFER_COMPLETED:        
             //Inform application that transfer is completed.
             m_transfer_completed = true;
@@ -451,18 +435,21 @@ void SX1276SetAntSw( uint8_t rxTx )
 {
     if( SX1276.RxTx == rxTx )
     {
+        SEGGER_RTT_WriteString(0,"AntSwitchLf AntSwitchHf same as before\n");
         return;
     }
 
     SX1276.RxTx = rxTx;
 
     if( rxTx != 0 ) // 1: TX, 0: RX
-    {
+    {   
+        SEGGER_RTT_WriteString(0,"AntSwitchLf 0 AntSwitchHf 1\n");
         nrf_gpio_pin_clear( AntSwitchLf );
         nrf_gpio_pin_set( AntSwitchHf );
     }
     else
     {
+        SEGGER_RTT_WriteString(0,"AntSwitchLf 1 AntSwitchHf 0\n");
         nrf_gpio_pin_set( AntSwitchLf );
         nrf_gpio_pin_clear( AntSwitchHf );
     }
@@ -470,20 +457,34 @@ void SX1276SetAntSw( uint8_t rxTx )
 
 void SX1276SetAntSwLowPower( bool status )
 {
-    // if( RadioIsActive != status )
-    // {
-    //     RadioIsActive = status;
+    if( RadioIsActive != status )
+    {
+        RadioIsActive = status;
     
         if( status == false )
         {
-            //SX1276AntSwInit( );
+            SX1276AntSwInit( );
         }
         else
         {
-            //SX1276AntSwDeInit( );
+            SX1276AntSwDeInit( );
         }
-    // }
+    }
 }
+
+
+void SX1276AntSwInit( void )
+{
+    nrf_gpio_pin_set( AntSwitchLf );
+    nrf_gpio_pin_clear( AntSwitchHf );
+}
+
+
+void SX1276AntSwDeInit( void )
+{
+    
+}
+
 
 uint8_t SX1276GetPaSelect( uint32_t channel )
 {
@@ -501,17 +502,17 @@ uint8_t SX1276GetPaSelect( uint32_t channel )
 void SX1276Init( void )
 {
     uint8_t i;
-    uint32_t err_code;
+    //uint32_t err_code;
 
-    timers_init();
+    //timers_init();
 
     SEGGER_RTT_WriteString(0, "INIT SX1276!\n");
 
     //Initialize SPI master.
-    err_code = spi_master_init();
-    APP_ERROR_CHECK(err_code);
+    spi_master_init();
+    //APP_ERROR_CHECK(err_code);
 
-    spi_master_evt_handler_reg(SPI_MASTER_HW, spi_master_event_handler);
+    //spi_master_evt_handler_reg(SPI_MASTER_HW, spi_master_event_handler);
 
     /* Initialising pi numbers */
     SX1276.Reset = 30;
@@ -539,6 +540,9 @@ void SX1276Init( void )
 
     SX1276SetModem( MODEM_FSK );
     SX1276.Settings.State = RF_IDLE;
+
+   
+
     SEGGER_RTT_WriteString(0, "INIT Complete\n");
 }
 
@@ -562,7 +566,7 @@ bool SX1276IsChannelFree( RadioModems_t modem, uint32_t freq, int16_t rssiThresh
 {
     int16_t rssi = 0;
     
-    SX1276SetModem( modem );
+    //SX1276SetModem( modem );
 
     SX1276SetChannel( freq );
     
@@ -590,7 +594,7 @@ uint32_t SX1276Random( void )
      * Radio setup for random number generation 
      */
     // Set LoRa modem ON
-    SX1276SetModem( MODEM_LORA );
+   // SX1276SetModem( MODEM_LORA );
 
     // Disable LoRa modem interrupts
     SX1276Write( REG_LR_IRQFLAGSMASK, RFLR_IRQFLAGS_RXTIMEOUT |
@@ -689,8 +693,11 @@ void SX1276SetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                          bool crcOn, bool freqHopOn, uint8_t hopPeriod,
                          bool iqInverted, bool rxContinuous )
 {
-    SX1276SetModem( modem );
+    
+    //modem = MODEM_LORA;
+    SX1276SetModem(modem);
 
+    SEGGER_RTT_printf(0, " Rx Setting Modem :%d \r\n", modem);
     switch( modem )
     {
     case MODEM_FSK:
@@ -771,6 +778,7 @@ void SX1276SetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                 SX1276.Settings.LoRa.LowDatarateOptimize = 0x00;
             }
 
+           // SEGGER_RTT_WriteString(0, "REG_LR_MODEMCONFIG1\n");
             SX1276Write( REG_LR_MODEMCONFIG1, 
                          ( SX1276Read( REG_LR_MODEMCONFIG1 ) &
                            RFLR_MODEMCONFIG1_BW_MASK &
@@ -778,7 +786,8 @@ void SX1276SetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                            RFLR_MODEMCONFIG1_IMPLICITHEADER_MASK ) |
                            ( bandwidth << 4 ) | ( coderate << 1 ) | 
                            fixLen );
-                        
+
+            //SEGGER_RTT_WriteString(0, "REG_LR_MODEMCONFIG2\n");            
             SX1276Write( REG_LR_MODEMCONFIG2,
                          ( SX1276Read( REG_LR_MODEMCONFIG2 ) &
                            RFLR_MODEMCONFIG2_SF_MASK &
@@ -787,14 +796,19 @@ void SX1276SetRxConfig( RadioModems_t modem, uint32_t bandwidth,
                            ( datarate << 4 ) | ( crcOn << 2 ) |
                            ( ( symbTimeout >> 8 ) & ~RFLR_MODEMCONFIG2_SYMBTIMEOUTMSB_MASK ) );
 
+            //SEGGER_RTT_WriteString(0, "REG_LR_MODEMCONFIG3\n");
             SX1276Write( REG_LR_MODEMCONFIG3, 
                          ( SX1276Read( REG_LR_MODEMCONFIG3 ) &
                            RFLR_MODEMCONFIG3_LOWDATARATEOPTIMIZE_MASK ) |
                            ( SX1276.Settings.LoRa.LowDatarateOptimize << 3 ) );
 
+            //SEGGER_RTT_WriteString(0, "REG_LR_SYMBTIMEOUTLSB\n");
             SX1276Write( REG_LR_SYMBTIMEOUTLSB, ( uint8_t )( symbTimeout & 0xFF ) );
             
+            //SEGGER_RTT_WriteString(0, "REG_LR_PREAMBLEMSB\n");
             SX1276Write( REG_LR_PREAMBLEMSB, ( uint8_t )( ( preambleLen >> 8 ) & 0xFF ) );
+
+            //SEGGER_RTT_WriteString(0, "REG_LR_PREAMBLELSB\n");
             SX1276Write( REG_LR_PREAMBLELSB, ( uint8_t )( preambleLen & 0xFF ) );
 
             if( fixLen == 1 )
@@ -856,10 +870,13 @@ void SX1276SetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                         bool fixLen, bool crcOn, bool freqHopOn, 
                         uint8_t hopPeriod, bool iqInverted, uint32_t timeout )
 {
+    //modem = MODEM_LORA;
     uint8_t paConfig = 0;
     uint8_t paDac = 0;
-
+    
     SX1276SetModem( modem );
+
+    SEGGER_RTT_printf(0, " Tx Setting Modem :%d \r\n", modem);
     
     paConfig = SX1276Read( REG_PACONFIG );
     paDac = SX1276Read( REG_PADAC );
@@ -1187,7 +1204,12 @@ void SX1276Send( uint8_t *buffer, uint8_t size )
             }
             // Write payload buffer
             SX1276WriteFifo( buffer, size );
+            //SEGGER_RTT_WriteString(0,"Initi Sending buffer..............\n");
+            //buf_print(buffer, size); 
             txTimeout = SX1276.Settings.LoRa.TxTimeout;
+            SEGGER_RTT_printf(0, " SX1276.Settings.LoRa.TxTimeout %d \r\n", txTimeout);
+
+
         }
         break;
     }
@@ -1196,6 +1218,7 @@ void SX1276Send( uint8_t *buffer, uint8_t size )
 
 void SX1276SetSleep( void )
 {
+    SEGGER_RTT_WriteString(0, "SX1276 SET Sleep\n");
     app_timer_stop( rx_timeout_timer );
     app_timer_stop( tx_timeout_timer );
 
@@ -1348,27 +1371,39 @@ void SX1276SetRx( uint32_t timeout )
 
     memset( RxTxBuffer, 0, ( size_t )RX_BUFFER_SIZE );
 
+
     SX1276.Settings.State = RF_RX_RUNNING;
+    SEGGER_RTT_WriteString(0, "SX1276 LORA RX\n");
+    SEGGER_RTT_printf(0, " SX1276.Settings.State %d \r\n", SX1276.Settings.State);
+    //timeout = 10000;
     if( timeout != 0 )
     {
+        //SEGGER_RTT_WriteString(0, "rx_timeout_timer\n");
+        
+        SEGGER_RTT_printf(0, " rx_timeout_timer timeout %d \r\n", timeout);
+        
         app_timer_start(rx_timeout_timer,APP_TIMER_TICKS(timeout,0),NULL);
     }
 
+    SEGGER_RTT_printf(0, " SX1276.Settings.Modem %d \r\n", SX1276.Settings.Modem);
     if( SX1276.Settings.Modem == MODEM_FSK )
     {
         SX1276SetOpMode( RF_OPMODE_RECEIVER );
         
         if( rxContinuous == false )
         {
-            // app_timer_start(rx_timeout_sync_word, APP_TIMER_TICKS((( 8.0 * ( SX1276.Settings.Fsk.PreambleLen +
-            //                                              ( ( SX1276Read( REG_SYNCCONFIG ) &
-            //                                                 ~RF_SYNCCONFIG_SYNCSIZE_MASK ) +
-            //                                              1.0 ) + 10.0 ) /
-            //                                             ( double )SX1276.Settings.Fsk.Datarate ) * 1e6), 0), NULL);
+             //app_timer_start(rx_timeout_sync_word, APP_TIMER_TICKS((( 8.0 * ( SX1276.Settings.Fsk.PreambleLen +
+               //                                           ( ( SX1276Read( REG_SYNCCONFIG ) &
+                 //                                            ~RF_SYNCCONFIG_SYNCSIZE_MASK ) +
+                   //                                       1.0 ) + 10.0 ) /
+                     //                                    ( double )SX1276.Settings.Fsk.Datarate ) * 1e6), 0), NULL);
         }
     }
     else
     {
+        SEGGER_RTT_printf(0, " rxContinuous %d \r\n", rxContinuous);
+        //SX1276SetOpMode( RFLR_OPMODE_RECEIVER );
+        //rxContinuous = true;
         if( rxContinuous == true )
         {
             SX1276SetOpMode( RFLR_OPMODE_RECEIVER );
@@ -1438,8 +1473,12 @@ void SX1276SetTx( uint32_t timeout )
 
     SX1276.Settings.State = RF_TX_RUNNING;
     app_timer_stop(tx_timeout_timer);
+    //timeout = 10000;
+    SEGGER_RTT_printf(0, " tx_timeout_timer %d \r\n", timeout);
+
     app_timer_start(tx_timeout_timer,APP_TIMER_TICKS(timeout,0),NULL);
     SX1276SetOpMode( RF_OPMODE_TRANSMITTER );
+    //SEGGER_RTT_printf(0, " tx_timeout_timer %d \r\n", timeout);
 }
 
 void SX1276StartCad( void )
@@ -1536,10 +1575,12 @@ void SX1276SetOpMode( uint8_t opMode )
             SX1276SetAntSwLowPower( false );
             if( opMode == RF_OPMODE_TRANSMITTER )
             {
+                SEGGER_RTT_WriteString(0, "RF_OPMODE_TRANSMITTER\n");
                  SX1276SetAntSw( 1 );
             }
             else
-            {
+            { 
+                SEGGER_RTT_WriteString(0, "NO RF_OPMODE_TRANSMITTER\n");
                  SX1276SetAntSw( 0 );
             }
         }
@@ -1565,6 +1606,7 @@ void SX1276SetModem( RadioModems_t modem )
     {
     default:
     case MODEM_FSK:
+        SEGGER_RTT_WriteString(0, "Setting MODEM_FSK!\n");
         SX1276SetOpMode( RF_OPMODE_SLEEP );
         SX1276Write( REG_OPMODE, ( SX1276Read( REG_OPMODE ) & RFLR_OPMODE_LONGRANGEMODE_MASK ) | RFLR_OPMODE_LONGRANGEMODE_OFF );
     
@@ -1572,6 +1614,7 @@ void SX1276SetModem( RadioModems_t modem )
         SX1276Write( REG_DIOMAPPING2, 0x30 ); // DIO5=ModeReady
         break;
     case MODEM_LORA:
+        SEGGER_RTT_WriteString(0, "Setting MODEM_LORA!\n");
         SX1276SetOpMode( RF_OPMODE_SLEEP );
         SX1276Write( REG_OPMODE, ( SX1276Read( REG_OPMODE ) & RFLR_OPMODE_LONGRANGEMODE_MASK ) | RFLR_OPMODE_LONGRANGEMODE_ON );
 
@@ -1597,24 +1640,41 @@ void SX1276WriteBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
 {
     uint8_t i;
 
+    //SEGGER_RTT_WriteString(0,"SX Writing Sending buffer..............\n");
+    //buf_print(buffer, size); 
+    //SEGGER_RTT_WriteString(0,"\n------------------------------------\n");
+
+    //NSS = 0;
+    nrf_gpio_pin_clear(SPIM0_SS_PIN);
+
     m_tx_data[0] = (addr | 0x80);
 
-    for (i = 0 ; i < size ; i++){
+    for (i = 0 ; i < size+1 ; i++){
         m_tx_data[i+1] = buffer[i];
     }
-        
+
+    //SEGGER_RTT_WriteString(0,"SX Writing Sending buffer\n");
+    //SEGGER_RTT_WriteString(0,"Writing: \n  Address:");
+    //buf_print(m_tx_data,1);
+    //SEGGER_RTT_WriteString(0,"\n  Buffer:");
+    //buf_print(&m_tx_data[1],size);
+    //SEGGER_RTT_WriteString(0,"\n----------\n");
+
     spi_send_recv(m_tx_data,m_rx_data, size + 1);
+    //SEGGER_RTT_WriteString(0,"SX Writing Sending buffer end\n");
     
-    SEGGER_RTT_WriteString(0,"Writing: \n  Address:");
-    buf_print(m_tx_data,1);
-    SEGGER_RTT_WriteString(0,"\n  Buffer:");
-    buf_print(&m_tx_data[1],size);
-    SEGGER_RTT_WriteString(0,"\n");
+    //NSS = 1;
+    nrf_gpio_pin_set(SPIM0_SS_PIN);
 }
 
 void SX1276ReadBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
 {
     uint8_t i;
+
+
+    //NSS = 0;
+    nrf_gpio_pin_clear(SPIM0_SS_PIN);
+
 
     m_tx_data[0] = (addr & 0x7F);
 
@@ -1624,15 +1684,19 @@ void SX1276ReadBuffer( uint8_t addr, uint8_t *buffer, uint8_t size )
         buffer[i] = m_rx_data[i+1];
     }
 
-    SEGGER_RTT_WriteString(0,"Reading: \n  Address:");
-    buf_print(m_tx_data,1);
-    SEGGER_RTT_WriteString(0,"\n  Buffer:");
-    buf_print(buffer,size);
-    SEGGER_RTT_WriteString(0,"\n");
+    //SEGGER_RTT_WriteString(0,"Reading: \n  Address:");
+    //buf_print(m_tx_data,1);
+    //SEGGER_RTT_WriteString(0,"\n  Buffer:");
+    //buf_print(buffer,size);
+    //SEGGER_RTT_WriteString(0,"\n");
+
+    //NSS = 1;
+    nrf_gpio_pin_set(SPIM0_SS_PIN);
 }
 
 void SX1276WriteFifo( uint8_t *buffer, uint8_t size )
 {
+    
     SX1276WriteBuffer( 0, buffer, size );
 }
 
@@ -1643,7 +1707,7 @@ void SX1276ReadFifo( uint8_t *buffer, uint8_t size )
 
 void SX1276SetMaxPayloadLength( RadioModems_t modem, uint8_t max )
 {
-    SX1276SetModem( modem );
+    //SX1276SetModem( modem );
 
     switch( modem )
     {
@@ -1659,12 +1723,13 @@ void SX1276SetMaxPayloadLength( RadioModems_t modem, uint8_t max )
     }
 }
 
-static void SX1276OnTimeoutIrq( void * p_context )
+void SX1276OnTimeoutIrq( void * p_context )
 {
     SEGGER_RTT_WriteString(0,"SX1276OnTimeoutIrq!\n");
     switch( SX1276.Settings.State )
     {
     case RF_RX_RUNNING:
+        SEGGER_RTT_WriteString(0,"RF_RX_RUNNING\n");
         if( SX1276.Settings.Modem == MODEM_FSK )
         {
             SX1276.Settings.FskPacketHandler.PreambleDetected = false;
@@ -1686,14 +1751,23 @@ static void SX1276OnTimeoutIrq( void * p_context )
             else
             {
                 SX1276.Settings.State = RF_IDLE;
-                app_timer_stop( rx_timeout_sync_word );
+                //app_timer_stop( rx_timeout_sync_word );
             }
         }
-        State = RX_TIMEOUT;
+        //State = RX_TIMEOUT;
+        if( RadioEvents.RxTimeout != NULL ) 
+        {
+            RadioEvents.RxTimeout( );
+        }
         break;
     case RF_TX_RUNNING:
+        SEGGER_RTT_WriteString(0,"RF_TX_RUNNING\n");
         SX1276.Settings.State = RF_IDLE;
-        State = TX_TIMEOUT;
+        //State = TX_TIMEOUT;
+        if(  RadioEvents.TxTimeout != NULL ) 
+        {
+            RadioEvents.TxTimeout( );
+        }
         break;
     default:
         break;
@@ -1702,13 +1776,17 @@ static void SX1276OnTimeoutIrq( void * p_context )
     SEGGER_RTT_WriteString(0,"Leaving timeout\n");
 }
 
-void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
+void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size  )
 {
     volatile uint8_t irqFlags = 0;
-
+    SEGGER_RTT_WriteString(0,"!!!!!enter Dio0IRQ!!!!!\n"); 
+    SEGGER_RTT_printf(0, " state %d \r\n", SX1276.Settings.State);
     switch( SX1276.Settings.State )
-    {                
+    {         
+        //SEGGER_RTT_WriteString(0,"***********switch!!!!!*********\n");       
         case RF_RX_RUNNING:
+            SEGGER_RTT_WriteString(0,"!!!!!RF_RX_RUNNING!!!!!\n");
+            //SEGGER_RTT_WriteString(0,"***********RxIRQ*********\n"); 
             //TimerStop( &RxTimeoutTimer );
             // RxDone interrupt
             switch( SX1276.Settings.Modem )
@@ -1736,7 +1814,12 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
                             SX1276Write( REG_RXCONFIG, SX1276Read( REG_RXCONFIG ) | RF_RXCONFIG_RESTARTRXWITHOUTPLLLOCK );
                         }
                         app_timer_stop( rx_timeout_timer );
-                        State = RX_ERROR;
+                        //State = RX_ERROR;
+                        
+                        if(  RadioEvents.RxError != NULL ) 
+                        {
+                            RadioEvents.RxError( );
+                        }
     
                         SX1276.Settings.FskPacketHandler.PreambleDetected = false;
                         SX1276.Settings.FskPacketHandler.SyncWordDetected = false;
@@ -1778,8 +1861,12 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
                 }
                 app_timer_stop( rx_timeout_timer );
 
-                State = RX;
-
+                //State = RX;
+                if( RadioEvents.RxDone != NULL ) 
+                {
+                    RadioEvents.RxDone( RxTxBuffer, SX1276.Settings.FskPacketHandler.Size, SX1276.Settings.FskPacketHandler.RssiValue, 0 );
+                }
+               
                 SX1276.Settings.FskPacketHandler.PreambleDetected = false;
                 SX1276.Settings.FskPacketHandler.SyncWordDetected = false;
                 SX1276.Settings.FskPacketHandler.NbBytes = 0;
@@ -1806,7 +1893,11 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
                         }
                         app_timer_stop( rx_timeout_timer );
                         
-                        State = RX_ERROR;
+                        //State = RX_ERROR;
+                        if( RadioEvents.RxError != NULL ) 
+                        {
+                            RadioEvents.RxError( );
+                        }
 
                         break;
                     }
@@ -1850,21 +1941,34 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
                         }
                     }
 
+                    //SEGGER_RTT_WriteString(0,"***********Loar Buffer *********\n");
                     SX1276.Settings.LoRaPacketHandler.Size = SX1276Read( REG_LR_RXNBBYTES );
                     SX1276ReadFifo( RxTxBuffer, SX1276.Settings.LoRaPacketHandler.Size );
-                
+                    //SEGGER_RTT_WriteString(0,"*********************************\n");
+                    
+                    SEGGER_RTT_WriteString(0,"*********************************\n");
+                    SEGGER_RTT_WriteString(0,"Buffer:");
+                    buf_print(RxTxBuffer,10);
+                    SEGGER_RTT_WriteString(0,"\n");
+
                     if( SX1276.Settings.LoRa.RxContinuous == false )
                     {
                         SX1276.Settings.State = RF_IDLE;
                     }
                     app_timer_stop( rx_timeout_timer );
 
-                    RssiValue = SX1276.Settings.LoRaPacketHandler.RssiValue;
+                    /*RssiValue = SX1276.Settings.LoRaPacketHandler.RssiValue;
                     SnrValue = SX1276.Settings.LoRaPacketHandler.SnrValue;
                     BufferSize = SX1276.Settings.LoRaPacketHandler.Size;
                     memcpy( Buffer, RxTxBuffer, BufferSize );
 
-                    State = RX;
+                    State = RX;*/
+
+                    if( RadioEvents.RxDone != NULL ) 
+                    {
+                        RadioEvents.RxDone( RxTxBuffer, SX1276.Settings.LoRaPacketHandler.Size, SX1276.Settings.LoRaPacketHandler.RssiValue, SX1276.Settings.LoRaPacketHandler.SnrValue );
+                    }
+                    
 
                 }
                 break;
@@ -1874,17 +1978,34 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
             break;
         case RF_TX_RUNNING:
             app_timer_stop( tx_timeout_timer );
+            SEGGER_RTT_WriteString(0,"!!!!!RF_TX_RUNNING!!!!!\n");
+            //SEGGER_RTT_printf(0, " Tx MODEM %d \r\n", SX1276.Settings.Modem);
             // TxDone interrupt
             switch( SX1276.Settings.Modem )
             {
             case MODEM_LORA:
                 // Clear Irq
+                //SEGGER_RTT_WriteString(0,"!!!!!MODEM_LORA!!!!!\n");
+                //SEGGER_RTT_WriteString(0,"***********Tx Lora*********\n");
                 SX1276Write( REG_LR_IRQFLAGS, RFLR_IRQFLAGS_TXDONE );
                 // Intentional fall through
             case MODEM_FSK:
+                //SEGGER_RTT_WriteString(0,"!!!!!MODEM_FSK!!!!!\n");
+                //SEGGER_RTT_WriteString(0,"***********Tx Fsk*********\n");
             default:
+                //SEGGER_RTT_WriteString(0,"!!!!!default!!!!!\n");
+                //SEGGER_RTT_WriteString(0,"***********Tx defulat*********\n");
                 SX1276.Settings.State = RF_IDLE;                
-                State = TX;
+                //State = TX;
+
+                if( RadioEvents.TxDone != NULL )
+                {
+                    
+                    RadioEvents.TxDone( );
+                    //SEGGER_RTT_WriteString(0,"***********TxDoneFunction*********\n");
+                    SEGGER_RTT_WriteString(0,"!!!!!TxDoneFunction!!!!!\n");
+                }
+                SEGGER_RTT_printf(0, " NVIC_GetPendingIRQ %d \r\n", NVIC_GetPendingIRQ(GPIOTE_IRQn));
                 
                 break;
             }
@@ -1895,14 +2016,19 @@ void SX1276OnDio0Irq( void * p_event_data, uint16_t event_size )
     SEGGER_RTT_WriteString(0,"Exiting DIO0\n");
 }
 
-void SX1276OnDio1Irq( void * p_event_data, uint16_t event_size )
+void SX1276OnDio1Irq( void * p_event_data, uint16_t event_size  )
 {
+    SEGGER_RTT_WriteString(0,"!!!!!SX1276OnDio1Irq!!!!!\n"); 
+    //volatile uint8_t irqFlags = 0;
     switch( SX1276.Settings.State )
-    {                
+    {         
+              
         case RF_RX_RUNNING:
+            SEGGER_RTT_WriteString(0,"!!!!!DIO1 RF_RX_RUNNING!!!!!\n");
             switch( SX1276.Settings.Modem )
             {
             case MODEM_FSK:
+                SEGGER_RTT_WriteString(0,"!!!!!DIO1 MODEM_FSK!!!!!\n"); 
                 // FifoLevel interrupt
                 // Read received packet size
                 if( ( SX1276.Settings.FskPacketHandler.Size == 0 ) && ( SX1276.Settings.FskPacketHandler.NbBytes == 0 ) )
@@ -1929,16 +2055,114 @@ void SX1276OnDio1Irq( void * p_event_data, uint16_t event_size )
                 }
                 break;
             case MODEM_LORA:
+                NVIC_SetPriority(SPI0_TWI0_IRQn,3); 
+                SEGGER_RTT_WriteString(0,"!!!!!DIO1 MODEM_LORA!!!!!\n");  
                 // Sync time out
                 app_timer_stop( rx_timeout_timer );
                 SX1276.Settings.State = RF_IDLE;
-                State = RX_TIMEOUT;
+                //State = RX_TIMEOUT;
+                if(  RadioEvents.RxTimeout != NULL ) 
+                {
+                    RadioEvents.RxTimeout( );
+                }
+
+                /*{
+                    int8_t snr = 0;
+
+                    SEGGER_RTT_WriteString(0,"RF_RX_RUNNING SX1276OnDio0Irq\n");
+                    // Clear Irq
+                    SX1276Write( REG_LR_IRQFLAGS, RFLR_IRQFLAGS_RXDONE );
+
+                    irqFlags = SX1276Read( REG_LR_IRQFLAGS );
+
+                    if( ( irqFlags & RFLR_IRQFLAGS_PAYLOADCRCERROR_MASK ) == RFLR_IRQFLAGS_PAYLOADCRCERROR )
+                    {
+                        // Clear Irq
+                        SX1276Write( REG_LR_IRQFLAGS, RFLR_IRQFLAGS_PAYLOADCRCERROR );
+
+                        if( SX1276.Settings.LoRa.RxContinuous == false )
+                        {
+                            SX1276.Settings.State = RF_IDLE;
+                        }
+                        app_timer_stop( rx_timeout_timer );
+                        
+                        //State = RX_ERROR;
+                        if( RadioEvents.RxError != NULL ) 
+                        {
+                            RadioEvents.RxError( );
+                        }
+
+                        break;
+                    }
+
+                    SX1276.Settings.LoRaPacketHandler.SnrValue = SX1276Read( REG_LR_PKTSNRVALUE );
+                    SEGGER_RTT_printf(0, " SX1276.Settings.LoRaPacketHandler.SnrValue %d \r\n", SX1276.Settings.LoRaPacketHandler.SnrValue);
+                    if( SX1276.Settings.LoRaPacketHandler.SnrValue & 0x80 ) // The SNR sign bit is 1
+                    {
+                        // Invert and divide by 4
+                        snr = ( ( ~SX1276.Settings.LoRaPacketHandler.SnrValue + 1 ) & 0xFF ) >> 2;
+                        snr = -snr;
+                    }
+                    else
+                    {
+                        // Divide by 4
+                        snr = ( SX1276.Settings.LoRaPacketHandler.SnrValue & 0xFF ) >> 2;
+                    }
+
+                    int16_t rssi = SX1276Read( REG_LR_PKTRSSIVALUE );
+                     SEGGER_RTT_printf(0, " rssi%d \r\n", rssi);
+                    if( snr < 0 )
+                    {
+                        if( SX1276.Settings.Channel > RF_MID_BAND_THRESH )
+                        {
+                            SX1276.Settings.LoRaPacketHandler.RssiValue = RSSI_OFFSET_HF + rssi + ( rssi >> 4 ) +
+                                                                          snr;
+                        }
+                        else
+                        {
+                            SX1276.Settings.LoRaPacketHandler.RssiValue = RSSI_OFFSET_LF + rssi + ( rssi >> 4 ) +
+                                                                          snr;
+                        }
+                    }
+                    else
+                    {    
+                        if( SX1276.Settings.Channel > RF_MID_BAND_THRESH )
+                        {
+                            SX1276.Settings.LoRaPacketHandler.RssiValue = RSSI_OFFSET_HF + rssi + ( rssi >> 4 );
+                        }
+                        else
+                        {
+                            SX1276.Settings.LoRaPacketHandler.RssiValue = RSSI_OFFSET_LF + rssi + ( rssi >> 4 );
+                        }
+                    }
+
+                    //SEGGER_RTT_WriteString(0,"***********Loar Buffer *********\n");
+                    SX1276.Settings.LoRaPacketHandler.Size = SX1276Read( REG_LR_RXNBBYTES );
+                    SX1276ReadFifo( RxTxBuffer, SX1276.Settings.LoRaPacketHandler.Size );
+
+                    SEGGER_RTT_WriteString(0,"*********************************\n");
+                    SEGGER_RTT_WriteString(0,"Buffer:");
+                    buf_print(RxTxBuffer,10);
+                    SEGGER_RTT_WriteString(0,"\n");
+
+                    if( SX1276.Settings.LoRa.RxContinuous == false )
+                    {
+                        SX1276.Settings.State = RF_IDLE;
+                    }
+                    app_timer_stop( rx_timeout_timer );
+
+                    if( RadioEvents.RxDone != NULL ) 
+                    {
+                        RadioEvents.RxDone( RxTxBuffer, SX1276.Settings.LoRaPacketHandler.Size, SX1276.Settings.LoRaPacketHandler.RssiValue, SX1276.Settings.LoRaPacketHandler.SnrValue );
+                    }
+                }*/
                 break;
             default:
                 break;
             }
             break;
         case RF_TX_RUNNING:
+            SEGGER_RTT_WriteString(0,"!!!!!DIO1 RF_TX_RUNNING!!!!!\n"); 
             switch( SX1276.Settings.Modem )
             {
             case MODEM_FSK:
@@ -1956,6 +2180,7 @@ void SX1276OnDio1Irq( void * p_event_data, uint16_t event_size )
                 }
                 break;
             case MODEM_LORA:
+                SEGGER_RTT_WriteString(0,"!!!!!DIO1 MODEM_LORA!!!!!\n"); 
                 break;
             default:
                 break;
@@ -1976,7 +2201,7 @@ void SX1276OnDio2Irq( void * p_event_data, uint16_t event_size )
             case MODEM_FSK:
                 if( ( SX1276.Settings.FskPacketHandler.PreambleDetected == true ) && ( SX1276.Settings.FskPacketHandler.SyncWordDetected == false ) )
                 {
-                    app_timer_stop( rx_timeout_sync_word );
+                    //app_timer_stop( rx_timeout_sync_word );
                     
                     SX1276.Settings.FskPacketHandler.SyncWordDetected = true;
                 
@@ -2095,4 +2320,11 @@ void SX1276OnDio5Irq( void * p_event_data, uint16_t event_size )
 
 void SX1276Scheduler( void ){
     app_sched_execute();
+}
+
+
+bool SX1276CheckRfFrequency( uint32_t frequency )
+{
+    // Implement check. Currently all frequencies are supported
+    return true;
 }
