@@ -1,0 +1,608 @@
+From d4c5f5dbfe0b63145ac3d9c3f411fc96944fd480 Mon Sep 17 00:00:00 2001
+From: delancao <delancao@gmail.com>
+Date: Wed, 10 Aug 2016 12:50:23 +0200
+Subject: [PATCH] patch1
+
+---
+ Board/things_module2/LoRaWAN/main.c | 389 +++++++++++++++++++++++++++---------
+ 1 file changed, 289 insertions(+), 100 deletions(-)
+
+diff --git a/Board/things_module2/LoRaWAN/main.c b/Board/things_module2/LoRaWAN/main.c
+index 70cecbe..4ddfc11 100755
+--- a/Board/things_module2/LoRaWAN/main.c
++++ b/Board/things_module2/LoRaWAN/main.c
+@@ -14,11 +14,30 @@ Maintainer: Miguel Luis and Gregory Cristian
+ */
+ #include <string.h>
+ #include <math.h>
+-#include "board.h"
+-
+ #include "LoRaMac.h"
++#include "radio.h"
++#include "sx1276.h"
+ #include "Comissioning.h"
+ 
++#include "app_error.h"
++#include "app_timer.h"
++#include "app_scheduler.h"
++#include "nrf_delay.h"
++#include "boards.h"
++#include "SEGGER_RTT.h"
++
++
++#include "main.h"
++#include "lora_val.h" 
++
++#define led0   25
++#define led1   26
++#define led2   27
++#define ledstart led0
++#define ledstop  led1
++
++#define DEBUG_info                                  1 // print debug information via SEGGER_RTT when 1
++
+ /*!
+  * Join requests trials duty cycle.
+  */
+@@ -150,7 +169,7 @@ static uint32_t TxDutyCycleTime;
+ /*!
+  * Timer to handle the application data transmission duty cycle
+  */
+-static TimerEvent_t TxNextPacketTimer;
++//static TimerEvent_t TxNextPacketTimer;
+ 
+ /*!
+  * Specifies the state of the application LED
+@@ -160,17 +179,17 @@ static bool AppLedStateOn = false;
+ /*!
+  * Timer to handle the state of LED1
+  */
+-static TimerEvent_t Led1Timer;
++//static TimerEvent_t Led1Timer;
+ 
+ /*!
+  * Timer to handle the state of LED2
+  */
+-static TimerEvent_t Led2Timer;
++//static TimerEvent_t Led2Timer;
+ 
+ /*!
+  * Timer to handle the state of LED4
+  */
+-static TimerEvent_t Led4Timer;
++//static TimerEvent_t Led4Timer;
+ 
+ /*!
+  * Indicates if a new packet can be sent
+@@ -207,11 +226,140 @@ struct ComplianceTest_s
+     uint8_t NbGateways;
+ }ComplianceTest;
+ 
++
++/***********************************************AIRFY*******************************************************************************/
++#define RAND_LOCAL_MAX 2147483647L
++
++static uint32_t next = 1;
++
++static int32_t rand1( void )
++{
++    return ( ( next = next * 1103515245L + 12345L ) % RAND_LOCAL_MAX );
++}
++
++static int32_t randr( int32_t min, int32_t max )
++{
++    return ( int32_t )rand1( ) % ( max - min + 1 ) + min;
++}
++
++/**@brief Function for error handling, which is called when an error has occurred. 
++ *
++ * @param[in] error_code  Error code supplied to the handler.
++ * @param[in] line_num    Line number where the handler is called.
++ * @param[in] p_file_name Pointer to the file name. 
++ */
++void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name)
++{
++    //Set LED2 high to indicate that error has occurred.
++    nrf_gpio_pin_toggle(led2);
++#if DEBUG_info
++    SEGGER_RTT_printf(0,"Died at %d line with error code %d in file %s\n",line_num,error_code,p_file_name);
++#endif
++    /*for (;;)
++    {
++        //No implementation needed.
++    }*/
++}
++
++
++volatile uint8_t HasLoopedThroughMain = 0;
++
++/**@brief Function for wakeup function, callen when device state is DEVICE_STATE_SLEEP
++ *
++ * @param[in] none
++ */
++void TimerWakeUpHandler( void )
++{
++    if( HasLoopedThroughMain < 5 )
++        {
++            HasLoopedThroughMain++;
++        }
++        else
++        { 
++            nrf_delay_ms(1000);
++        }
++    //
++}
++
++/** Starting the internal LFCLK RC oscillator.
++ */
++static void lfclk_config(void)
++{
++    NRF_CLOCK->LFCLKSRC            = (CLOCK_LFCLKSRC_SRC_RC << CLOCK_LFCLKSRC_SRC_Pos);
++    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
++    NRF_CLOCK->TASKS_LFCLKSTART    = 1;
++    while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0)
++    {
++        //Do nothing.
++    }
++    NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
++   // SEGGER_RTT_WriteString(0,"Started LFCLK RC oscillator!\n");
++}
++
++/*************************************SI7006**********************************************************************************************/
++#include "twi_master.h"
++
++char print_buff[10] ;
++#define SI7006_ADDRESS             0x80    //SI7006 7 bit base address is 0x40, set LSB to 1 for read, 0 for write
++const uint8_t command_read_hum =   0xE5;   //Measure Relative Humidity, Hold Master Mode
++const uint8_t command_read_temp =  0xE3;   //Measure Temperature, Hold Master Mode
++
++
++/**@brief: SI7006 sensor read funtion, reading the SI7006 sensor data base on I2C
++*
++*  param[i]: data_in_celcius: interger part of the detected sensor data
++*  param[i]: data_fraction:   fraction part of the detected sensor data
++*  param[i]: command_read:    I2C commond transfered to the device address
++*  @retval true     Data Readed successful.
++*/
++bool SI7006_read(uint8_t * data_in_celcius, uint8_t * data_fraction, uint8_t command_read)
++{
++    bool transfer_succeeded = false;
++
++    // Write: Begin read sensor command
++    if (twi_master_transfer(SI7006_ADDRESS , (uint8_t *)&command_read, 1, TWI_DONT_ISSUE_STOP))
++    {   
++        uint8_t data_buffer[2];
++
++        // Read: 2 sensor bytes to data_buffer
++        if (twi_master_transfer(SI7006_ADDRESS | TWI_READ_BIT , data_buffer, 2, TWI_ISSUE_STOP))
++        {
++            *data_in_celcius = (int8_t)data_buffer[0];
++            *data_fraction   = (int8_t)data_buffer[1];
++
++            transfer_succeeded = true;
++        }
++    }
++
++    return transfer_succeeded;
++}
++/******************************************************************************************************************************/
++
++
+ /*!
+  * \brief   Prepares the payload of the frame
+  */
+ static void PrepareTxFrame( uint8_t port )
+ {
++    uint8_t si_temp;
++    uint8_t si_temp_fraction;
++    float si_temperature=0;
++
++    //read temperature if available
++    if (SI7006_read(&si_temp, &si_temp_fraction,command_read_temp))
++    {
++        si_temperature = (float)((((si_temp * 256 + si_temp_fraction) * 175.72) / 65536.0) - 46.85);
++
++#if DEBUG_info
++        sprintf(print_buff, "temperature: %f\n\r", si_temperature);
++        SEGGER_RTT_WriteString(0,print_buff);
++#endif
++    }else{
++#if DEBUG_info
++        SEGGER_RTT_WriteString(0,"rtemperature read error\n");
++#endif
++    }
++
+     switch( port )
+     {
+     case 2:
+@@ -224,12 +372,13 @@ static void PrepareTxFrame( uint8_t port )
+             uint16_t altitudeGps = 0xFFFF;
+             uint8_t batteryLevel = 0;
+                         //DHT22_Read();
+-            pressure = ( uint16_t )( MPL3115ReadPressure( ) / 10 );             // in hPa / 10
+-            temperature = 00;//( DHT22getTemperature() * 100 );       // in °C * 100
+-            altitudeBar = ( int16_t )( MPL3115ReadAltitude( ) * 10 );           // in m * 10
+-            batteryLevel = BoardGetBatteryLevel( );                             // 1 (very low) to 254 (fully charged)
+-            GpsGetLatestGpsPositionBinary( &latitude, &longitude );
+-            altitudeGps = GpsGetLatestGpsAltitude( );                           // in m
++            pressure = 0;//( uint16_t )( MPL3115ReadPressure( ) / 10 );             // in hPa / 10
++            temperature = ( uint16_t )(si_temperature*100);;//( DHT22getTemperature() * 100 );       // in °C * 100
++            altitudeBar = 0;//( int16_t )( MPL3115ReadAltitude( ) * 10 );           // in m * 10
++            batteryLevel = 0;//BoardGetBatteryLevel( );                             // 1 (very low) to 254 (fully charged)
++            //GpsGetLatestGpsPositionBinary( &latitude, &longitude );
++            latitude = 0;
++            altitudeGps = 0;//GpsGetLatestGpsAltitude( );                           // in m
+ 
+             AppData[0] = AppLedStateOn;
+             AppData[1] = ( pressure >> 8 ) & 0xFF;
+@@ -318,39 +467,40 @@ static void PrepareTxFrame( uint8_t port )
+  */
+ static bool SendFrame( void )
+ {
+-    McpsReq_t mcpsReq;
++    //McpsReq_t mcpsReq;
+     LoRaMacTxInfo_t txInfo;
+     
+     if( LoRaMacQueryTxPossible( AppDataSize, &txInfo ) != LORAMAC_STATUS_OK )
+     {
+         // Send empty frame in order to flush MAC commands
+-        mcpsReq.Type = MCPS_UNCONFIRMED;
+-        mcpsReq.Req.Unconfirmed.fBuffer = NULL;
+-        mcpsReq.Req.Unconfirmed.fBufferSize = 0;
+-        mcpsReq.Req.Unconfirmed.Datarate = DR_0;
++        mcpsRequest.Type = MCPS_UNCONFIRMED;
++        mcpsRequest.Req.Unconfirmed.fBuffer = NULL;
++        mcpsRequest.Req.Unconfirmed.fBufferSize = 0;
++        mcpsRequest.Req.Unconfirmed.Datarate = DR_0;
+     }
+     else
+     {
+         if( IsTxConfirmed == false )
+         {
+-            mcpsReq.Type = MCPS_UNCONFIRMED;
+-            mcpsReq.Req.Unconfirmed.fPort = AppPort;
+-            mcpsReq.Req.Unconfirmed.fBuffer = AppData;
+-            mcpsReq.Req.Unconfirmed.fBufferSize = AppDataSize;
+-            mcpsReq.Req.Unconfirmed.Datarate = DR_0;
++            mcpsRequest.Type = MCPS_UNCONFIRMED;
++            mcpsRequest.Req.Unconfirmed.fPort = AppPort;
++            mcpsRequest.Req.Unconfirmed.fBuffer = AppData;
++            mcpsRequest.Req.Unconfirmed.fBufferSize = AppDataSize;
++            mcpsRequest.Req.Unconfirmed.Datarate = DR_0;
+         }
+         else
+         {
+-            mcpsReq.Type = MCPS_CONFIRMED;
+-            mcpsReq.Req.Confirmed.fPort = AppPort;
+-            mcpsReq.Req.Confirmed.fBuffer = AppData;
+-            mcpsReq.Req.Confirmed.fBufferSize = AppDataSize;
+-            mcpsReq.Req.Confirmed.NbTrials = 8;
+-            mcpsReq.Req.Confirmed.Datarate = DR_0;
++            mcpsRequest.Type = MCPS_CONFIRMED;
++            mcpsRequest.Req.Confirmed.fPort = AppPort;
++            mcpsRequest.Req.Confirmed.fBuffer = AppData;
++            mcpsRequest.Req.Confirmed.fBufferSize = AppDataSize;
++            mcpsRequest.Req.Confirmed.NbTrials = 8;
++            mcpsRequest.Req.Confirmed.Datarate = DR_0;
+         }
+     }
+-        GpioWrite( &Led2, GpioRead( &Led2 ) ^ 1 );
+-    if( LoRaMacMcpsRequest( &mcpsReq ) == LORAMAC_STATUS_OK )
++        //nrf_gpio_pin_toggle(led2);
++    //define McpsReq_t mcpsRequest as global value to fix the array bug
++    if( LoRaMacMcpsRequest() == LORAMAC_STATUS_OK )
+     {
+         return false;
+     }
+@@ -360,12 +510,13 @@ static bool SendFrame( void )
+ /*!
+  * \brief Function executed on TxNextPacket Timeout event
+  */
+-static void OnTxNextPacketTimerEvent( void )
++static void OnTxNextPacketTimerEvent( void * p_context )
+ {
+     MibRequestConfirm_t mibReq;
+     LoRaMacStatus_t status;
+ 
+-    TimerStop( &TxNextPacketTimer );
++    app_timer_stop(TxNextPacketTimer);
++
+ 
+     mibReq.Type = MIB_NETWORK_JOINED;
+     status = LoRaMacMibGetRequestConfirm( &mibReq );
+@@ -384,35 +535,72 @@ static void OnTxNextPacketTimerEvent( void )
+     }
+ }
+ 
+-/*!
+- * \brief Function executed on Led 1 Timeout event
+- */
+-static void OnLed1TimerEvent( void )
+-{
+-    TimerStop( &Led1Timer );
+-    // Switch LED 1 OFF
+-    GpioWrite( &Led1, 1 );
+-}
+ 
+-/*!
+- * \brief Function executed on Led 2 Timeout event
++/*
++ * Timer initialization.
+  */
+-static void OnLed2TimerEvent( void )
+-{
+-    TimerStop( &Led2Timer );
+-    // Switch LED 2 OFF
+-    GpioWrite( &Led2, 1 );
+-}
++static void Timer_init(void)
++{   
++    uint32_t err_code;
+ 
+-/*!
+- * \brief Function executed on Led 4 Timeout event
+- */
+-static void OnLed4TimerEvent( void )
+-{
+-    TimerStop( &Led4Timer );
+-    // Switch LED 4 OFF
+-    GpioWrite( &Led4, 1 );
++    lfclk_config();
++
++    // Initialize timer module.
++    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_MAX_TIMERS, APP_TIMER_OP_QUEUE_SIZE, true);
++
++    // Initialize driver timeout timers
++
++    err_code = app_timer_create(&TxNextPacketTimer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnTxNextPacketTimerEvent);    
++    APP_ERROR_CHECK(err_code);  
++
++    
++    err_code = app_timer_create(&tx_timeout_timer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                SX1276OnTimeoutIrq);    
++    APP_ERROR_CHECK(err_code);    
++
++     err_code = app_timer_create(&rx_timeout_timer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                SX1276OnTimeoutIrq);
++    APP_ERROR_CHECK(err_code); 
++
++    /*err_code = app_timer_create(&rx_timeout_sync_word,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                SX1276OnTimeoutIrq);
++    APP_ERROR_CHECK(err_code);*/
++
++    err_code = app_timer_create(&MacStateCheckTimer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnMacStateCheckTimerEvent);    
++    APP_ERROR_CHECK(err_code); 
++
++    err_code = app_timer_create(&TxDelayedTimer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnTxDelayedTimerEvent);    
++    APP_ERROR_CHECK(err_code);    
++
++    err_code = app_timer_create(&RxWindowTimer1,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnRxWindow1TimerEvent);
++    APP_ERROR_CHECK(err_code); 
++
++    err_code = app_timer_create(&RxWindowTimer2,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnRxWindow2TimerEvent);
++    APP_ERROR_CHECK(err_code); 
++
++    err_code = app_timer_create(&AckTimeoutTimer,
++                                APP_TIMER_MODE_SINGLE_SHOT,
++                                OnAckTimeoutTimerEvent);
++    APP_ERROR_CHECK(err_code); 
++
++    // Initialize scheduler module
++   APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
+ }
++/*********************************************************************************************/
++
+ /*!
+  * \brief   MCPS-Confirm event function
+  *
+@@ -448,8 +636,7 @@ static void McpsConfirm( McpsConfirm_t *McpsConfirm )
+         }
+ 
+         // Switch LED 1 ON
+-        GpioWrite( &Led1, 0 );
+-        TimerStart( &Led1Timer );
++        //nrf_gpio_pin_toggle(led1);
+     }
+     NextTx = true;
+ }
+@@ -462,6 +649,9 @@ static void McpsConfirm( McpsConfirm_t *McpsConfirm )
+  */
+ static void McpsIndication( McpsIndication_t *McpsIndication )
+ {
++#if DEBUG_info
++    SEGGER_RTT_WriteString(0,"McpsIndication...........\n");
++#endif
+     if( McpsIndication->Status != LORAMAC_EVENT_INFO_STATUS_OK )
+     {
+         return;
+@@ -513,14 +703,13 @@ static void McpsIndication( McpsIndication_t *McpsIndication )
+             if( McpsIndication->BufferSize == 1 )
+             {
+                 AppLedStateOn = McpsIndication->Buffer[0] & 0x01;
+-                GpioWrite( &Led3, ( ( AppLedStateOn & 0x01 ) != 0 ) ? 0 : 1 );
+             }
+             break;
+-                case 10: // Locate: Send GPS Data
+-                      TimerStop( &TxNextPacketTimer );
+-                      TimerSetValue( &TxNextPacketTimer, 100000 );
++        /*case 10: // Locate: Send GPS Data
++            TimerStop( &TxNextPacketTimer );
++            TimerSetValue( &TxNextPacketTimer, 100000 );
+             TimerStart( &TxNextPacketTimer );
+-                        break;
++            break;*/
+         case 224:
+             if( ComplianceTest.Running == false )
+             {
+@@ -609,8 +798,7 @@ static void McpsIndication( McpsIndication_t *McpsIndication )
+     }
+ 
+     // Switch LED 2 ON for each received downlink
+-    GpioWrite( &Led2, 0 );
+-    TimerStart( &Led2Timer );
++    nrf_gpio_pin_toggle(led2);
+ }
+ 
+ /*!
+@@ -649,53 +837,41 @@ static void MlmeConfirm( MlmeConfirm_t *MlmeConfirm )
+     NextTx = true;
+ }
+ 
+-
+-#include <stdio.h>
+-
+- 
+-int fputc(int c, FILE *stream)
+-{
+-   return(ITM_SendChar(c));
+-}
+-
+-int a = 0;
+ /**
+  * Main application entry point.
+  */
+ int main( void )
+-{  
++{
++    Timer_init();
++
++    nrf_gpio_range_cfg_output(ledstart, ledstop);
++
+     LoRaMacPrimitives_t LoRaMacPrimitives;
+     LoRaMacCallback_t LoRaMacCallbacks;
+     MibRequestConfirm_t mibReq;
+ 
+-    BoardInitMcu( );
+-    BoardInitPeriph( );
+-        TIM4_Init();
+     DeviceState = DEVICE_STATE_INIT;
+ 
++    nrf_gpio_pin_toggle(led1);
++    
++
+     while( 1 )
+-    {       printf("hello world a = %d\r\n",a);
+-                a++;
++    {
++        nrf_gpio_pin_toggle(led1);
++        app_sched_execute();
+         switch( DeviceState )
+-        {       
++        {
+             case DEVICE_STATE_INIT:
+             {
++#if DEBUG_info
++                SEGGER_RTT_WriteString(0,"*****DEVICE_STATE_INIT******\n");
++#endif
+                 LoRaMacPrimitives.MacMcpsConfirm = McpsConfirm;
+                 LoRaMacPrimitives.MacMcpsIndication = McpsIndication;
+                 LoRaMacPrimitives.MacMlmeConfirm = MlmeConfirm;
+-                LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
++                LoRaMacCallbacks.GetBatteryLevel = 0;//BoardGetBatteryLevel;
+                 LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks );
+ 
+-                TimerInit( &TxNextPacketTimer, OnTxNextPacketTimerEvent );
+-
+-                TimerInit( &Led1Timer, OnLed1TimerEvent );
+-                TimerSetValue( &Led1Timer, 25000 );
+-
+-                TimerInit( &Led2Timer, OnLed2TimerEvent );
+-                TimerSetValue( &Led2Timer, 25000 );
+-
+-                TimerInit( &Led4Timer, OnLed4TimerEvent );
+-                TimerSetValue( &Led4Timer, 25000 );
+ 
+                 mibReq.Type = MIB_ADR;
+                 mibReq.Param.AdrEnable = LORAWAN_ADR_ON;
+@@ -723,6 +899,9 @@ int main( void )
+             }
+             case DEVICE_STATE_JOIN:
+             {
++#if DEBUG_info
++                SEGGER_RTT_WriteString(0,"*****DEVICE_STATE_JOIN******\n");
++#endif
+ #if( OVER_THE_AIR_ACTIVATION != 0 )
+                 MlmeReq_t mlmeReq;
+ 
+@@ -750,7 +929,7 @@ int main( void )
+ 
+                 // Choose a random device address
+  //               DevAddr = randr( 0, 0x01FFFFFF );
+-                                DevAddr = LORAWAN_DEVICE_ADDRESS;
++                DevAddr = LORAWAN_DEVICE_ADDRESS;
+                 mibReq.Type = MIB_NET_ID;
+                 mibReq.Param.NetID = LORAWAN_NETWORK_ID;
+                 LoRaMacMibSetRequestConfirm( &mibReq );
+@@ -777,6 +956,9 @@ int main( void )
+             }
+             case DEVICE_STATE_SEND:
+             {
++#if DEBUG_info
++                SEGGER_RTT_WriteString(0,"*****DEVICE_STATE_SEND******\n");
++#endif
+                 if( NextTx == true )
+                 {
+                     PrepareTxFrame( AppPort );
+@@ -793,22 +975,29 @@ int main( void )
+                     // Schedule next packet transmission
+                     TxDutyCycleTime = APP_TX_DUTYCYCLE + randr( -APP_TX_DUTYCYCLE_RND, APP_TX_DUTYCYCLE_RND );
+                 }
++                //define TxDutyCycleTime maully to fit for the schedule
++                TxDutyCycleTime = 8000;
++#if DEBUG_info
++                SEGGER_RTT_printf(0, " TxDutyCycleTime %d \r\n", TxDutyCycleTime);
++#endif
+                 DeviceState = DEVICE_STATE_CYCLE;
+                 break;
+             }
+             case DEVICE_STATE_CYCLE:
+             {
++#if DEBUG_info
++                SEGGER_RTT_WriteString(0,"*****DEVICE_STATE_CYCLE******\n");
++#endif
+                 DeviceState = DEVICE_STATE_SLEEP;
+ 
+                 // Schedule next packet transmission
+-                TimerSetValue( &TxNextPacketTimer, TxDutyCycleTime );
+-                TimerStart( &TxNextPacketTimer );
++                app_timer_start(TxNextPacketTimer,APP_TIMER_TICKS(TxDutyCycleTime,0),NULL);
+                 break;
+             }
+             case DEVICE_STATE_SLEEP:
+             {
+                 // Wake up through events
+-                TimerLowPowerHandler( );
++                //TimerWakeUpHandler( );
+                 break;
+             }
+             default:
+@@ -817,11 +1006,11 @@ int main( void )
+                 break;
+             }
+         }
+-        if( GpsGetPpsDetectedState( ) == true )
++        /*if( GpsGetPpsDetectedState( ) == true )
+         {
+             // Switch LED 4 ON
+             GpioWrite( &Led4, 0 );
+             TimerStart( &Led4Timer );
+-        }
++        }*/
+     }
+ }
+-- 
+2.6.4 (Apple Git-63)
+
